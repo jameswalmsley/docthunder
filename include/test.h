@@ -1,6 +1,13 @@
 #ifndef _TEST_H_
 #define _TEST_H_
 
+/**
+ *	@author		James Walmsley <james@fullfat-fs.co.uk>
+ *	@defgroup	TEST	The Test Module
+ *	@ingroup	TEST
+ *	@copyright	(C) 2012 James Walmsley
+ **/
+
 #define MAX_PATH 1024 		///< Defines the maximum path length
 #define 	MAX_PATH_LEN 		2048		///< Another max_path length
 
