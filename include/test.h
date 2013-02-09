@@ -6,6 +6,7 @@
  *	@defgroup	TEST	The Test Module
  *	@ingroup	TEST
  *	@copyright	(C) 2012 James Walmsley
+ *	@file		testing.h
  **/
 
 #define MAX_PATH 1024 		///< Defines the maximum path length
