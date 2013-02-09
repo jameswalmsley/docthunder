@@ -2,7 +2,8 @@
 #define _TEST_H_
 
 /**
- *	@author		James Walmsley <james@fullfat-fs.co.uk>
+ *	@author		James Walmsley 	<james@fullfat-fs.co.uk>
+ *	@author		Scott Chacon	<schacon@github.com>
  *	@defgroup	TEST	The Test Module
  *	@ingroup	TEST
  *	@copyright	(C) 2012 James Walmsley
