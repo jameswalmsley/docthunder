@@ -97,7 +97,7 @@ class DocThunder
     data.compact!    # This will remove any Nil entries!
 
     puts "        * Extracting file meta-data"
-    meta = Meta.new(data)
+    meta = Meta.new(data, filepath)
 
     #data.each do |function|
     #  has_comments = false
