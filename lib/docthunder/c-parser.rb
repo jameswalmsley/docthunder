@@ -1,8 +1,10 @@
+require 'docthunder/meta'
+
 class DocThunder
   def parse_headers(version)
     puts "    * Initialising parser for #{version.name}"
     headers.each do |header|
-      puts "        * Parsing #{header}"
+      puts "        * Block-wise parsing stage for #{header}"
       parse_header(version, header)
     end
   end
@@ -94,13 +96,16 @@ class DocThunder
 
     data.compact!    # This will remove any Nil entries!
 
-    data.each do |function|
-      has_comments = false
-      if function[:comments].size > 0
-        has_comments = true
-      end
-      puts "            * Function #{has_comments}: #{function[:code]}"
-    end
+    puts "        * Extracting file meta-data"
+    meta = Meta.new(data)
+
+    #data.each do |function|
+    #  has_comments = false
+    #  if function[:comments].size > 0
+    #    has_comments = true
+    #  end
+    #  puts "            * Function #{has_comments}: #{function[:code]}"
+    #end
 
   end
 end
