@@ -4,6 +4,7 @@ $LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
 
 require 'rubygems'
 require 'gli'
+require 'colored'
 require 'docthunder'
 require 'docthunder/cli'
 
@@ -30,9 +31,17 @@ command :gen do |c|
   end
 end
 
-
-print "DocThunder %{version}\n" % {:version => DocThunder::VERSION}
+print "D".bold.red
+print "o".green
+print "c".bold.blue
+print "T".yellow
+print "h".bold.red
+print "u".green
+print "n".bold.blue
+print "d".yellow
+print "e".bold.red
+print "r".green
+print " %{version}\n".yellow % {:version => DocThunder::VERSION}
 print "OO Replacement for Docurium by James Walmsley\n\n"
-
 
 exit run(ARGV)
