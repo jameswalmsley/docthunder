@@ -1,3 +1,5 @@
+require 'colored'
+
 class DocThunder
   class Meta
     attr_reader :file, :brief, :defgroup, :ingroup, :authors, :copyright, :description
@@ -30,10 +32,8 @@ class DocThunder
       end
 
       if @file != File.basename(filename)
-        puts "        ! WARNING: #{filename}:#{file_line} :: @file directive (#{@file}) mis-matches with filename... using real-name"
+        puts "        ! WARNING: #{filename}:#{file_line} :: @file directive (#{@file}) mis-matches with filename... using real-name".yellow
       end
-
-      p self
 
     end
 
