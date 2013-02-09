@@ -40,4 +40,10 @@ int printf(char *format, ...);
 int strcpy(char *dest, const char *src);
 
 
+/**
+ *	Some other information about this file! -- Could be a page or W/E!
+ *
+ **/
+
+
 #endif
