@@ -22,7 +22,15 @@ int main(int argc, char **argv);
 
 int printf(char *format, ...);
 
-
+/**
+ *	@brief Copies a standard C string.
+ *
+ *	@param	dest	The destination string.
+ *	@param	src		The source string.
+ *
+ *	@return	number of chars copied.
+ **/
+int strcpy(char *dest, const char *src);
 
 
 #endif
