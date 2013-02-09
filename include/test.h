@@ -41,6 +41,21 @@ int strcpy(char *dest, const char *src);
 
 
 /**
+ *	@brief Copies a standard C string.
+ *
+ *	@param	dest	The destination string.
+ *	@param	src		The source string.
+ *	@nMax	The max number of chars.
+ *
+ *	@return	number of chars copied.
+ **/
+
+int strncpy(char *dest, const char *src, int nMax);
+
+
+
+
+/**
  *	Some other information about this file! -- Could be a page or W/E!
  *
  **/
