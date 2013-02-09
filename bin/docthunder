@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
+
+require 'rubygems'
+require 'gli'
+require 'docthunder'
+require 'docthunder/cli'
+
+include GLI::App
+
+version DocThunder::Version
+
+desc 'Generate (HTML|TEX|MARKDOWN|PDF) documentation'
+long_desc 'DocThunder allows you to generate documentation based on a docster configuration file'
+command :doc do |c|
+  c.action do |global_options, options, args|
+    file = args.first
+    DocThunder::CLI.doc(file, options)
+  end
+end
+
+desc 'Generate DocThunder config file template'
+long_desc 'Outputs a configuration sample to the specified filename.'
+
+command :gen do |c|
+  c.action do |global_options,options,args|
+    file = args.first || 'api.docthunder'
+    DocThunder::CLI.gen(file)
+  end
+end
+
+
+print "DocThunder %{version}\n" % {:version => DocThunder::VERSION}
+print "OO Replacement for Docurium by James Walmsley\n\n"
+
+
+exit run(ARGV)
