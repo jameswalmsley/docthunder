@@ -70,25 +70,36 @@ class DocThunder
         end
 
         data[current] ||= {:comments => '', :code => [], :line => lineno}
-        data[current][:lineto] = lineno
-
-        if in_comment
-          data[current][:comments] += clean_comment(line) + "\n"
-        else
-          data[current][:code] << line
-        end
+        data[current][:lineto] = lineno   
 
         if m = /(.*?);$/.match(line)        # e.g. matching: code;
           if (data[current][:code].size > 0) && !in_block
             current += 1
+          else
+            data[current][:code] << line
+            current += 1
           end
           in_comment = false if line =~ /\*\//
           in_block = false if line =~ /\}/
+        else 
+          if in_comment
+            data[current][:comments] += clean_comment(line) + "\n"
+          else
+            data[current][:code] << line
+          end
         end
-      end
-           
-      p data
+      end    
 
+    end
+
+    data.compact!    # This will remove any Nil entries!
+
+    data.each do |function|
+      has_comments = false
+      if function[:comments].size > 0
+        has_comments = true
+      end
+      puts "            * Function #{has_comments}: #{function[:code]}"
     end
 
   end
