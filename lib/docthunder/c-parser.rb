@@ -1,4 +1,5 @@
 require 'docthunder/meta'
+require 'docthunder/function'
 
 class DocThunder
   def parse_headers(version)
@@ -99,13 +100,34 @@ class DocThunder
     puts "        * Extracting file meta-data"
     meta = Meta.new(data, filepath)
 
-    #data.each do |function|
-    #  has_comments = false
-    #  if function[:comments].size > 0
-    #    has_comments = true
-    #  end
-    #  puts "            * Function #{has_comments}: #{function[:code]}"
-    #end
+    puts "        * Extracting function documentation"
+    functions = extract_functions(data)
+
+    #p functions
 
   end
+
+  def extract_functions(data)
+    functions = []
+    data.each do |block|
+      next if block[:code].size == 0
+      
+      code = block[:code].join(" ")
+      comments = block[:comments]
+
+      if m = /^(.*?) ([a-zA-Z_]+)\((.*)\)/.match(code)
+        ret = m[1].strip
+        name = m[2].strip
+        argstring = m[3].strip
+
+        function = Function.new(ret, name, argstring, comments)
+
+        functions << function
+      end
+
+    end
+
+    functions
+  end
 end
+
