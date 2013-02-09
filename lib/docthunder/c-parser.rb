@@ -2,16 +2,27 @@ require 'docthunder/meta'
 require 'docthunder/function'
 
 class DocThunder
+  class SourceFile
+    attr_accessor :functions
+    def initialize
+      @functions = []
+    end
+  end
+end
+
+class DocThunder
   def parse_headers(version)
     puts "    * Initialising parser for #{version.name}"
     headers.each do |header|
       puts "        * Block-wise parsing stage for #{header}"
-      parse_header(version, header)
+      @file_obj = DocThunder::SourceFile.new
+      parse_header(@file_obj, header)
+      puts @file_obj.functions.to_json
     end
   end
 
 
-  def parse_header(version, filepath)
+  def parse_header(file_obj, filepath)
     lineno = 0
     content = File.readlines(filepath)
 
@@ -103,8 +114,7 @@ class DocThunder
     puts "        * Extracting function documentation"
     functions = extract_functions(data)
 
-    #p functions
-
+    file_obj.functions = functions
   end
 
   def extract_functions(data)

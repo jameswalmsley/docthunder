@@ -9,6 +9,14 @@ class DocThunder
       @comment = comment
     end
 
+    def to_json(*a)
+      {
+        "type" => @type,
+        "name" => @name,
+        "comment" => @comment
+      }.to_json(*a)
+    end
+
   end
 
   class Function
@@ -75,5 +83,14 @@ class DocThunder
       end
 
     end
+
+    def to_json(*a)
+      {
+        "name" => @name,
+        "args" => @args
+      }.to_json(*a)
+
+    end
+
   end
 end

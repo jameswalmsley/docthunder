@@ -2,6 +2,8 @@ class DocThunder
   class Project
     class Version
       attr_reader :name
+      attr_accessor :functions
+
       def initialize(name, config)
         @name = name
         @config = config
@@ -13,7 +15,11 @@ class DocThunder
           docthunder.checkout(@name, @config.workdir)
           docthunder.parse_headers(self)
         end
-        puts "    * Parsing and building object tree for #{@name}"
+
+        #@functions.to_json
+
+        puts "    * Running heuristics on object tree"        
+        puts "    * Generating #{@name} Documents based on template".green
       end
     end
   end
