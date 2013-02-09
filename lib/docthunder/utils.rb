@@ -52,7 +52,7 @@ class DocThunder
   def checkout(version, workdir)
     with_git_env(workdir) do
       `git read-tree #{version}:#{@project.config.input}`
-      `git checkout-index -a`
+      `git checkout-index -a -f`
     end
   end
 
