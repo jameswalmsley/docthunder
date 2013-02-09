@@ -20,7 +20,7 @@
 int main(int argc, char **argv);
 
 
-
+int printf(char *format, ...);
 
 
 
