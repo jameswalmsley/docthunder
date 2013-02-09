@@ -1,0 +1,12 @@
+{
+ "name":   "libPiMAC",
+ "github": "user/project",
+ "input":  "include",
+ "prefix": "lib_",
+ "output": "docs",
+ "authors": [
+ 			{ "name": "James Walmsley", "email": "james@fullfat-fs.co.uk" },
+			{ "name": "Scott Chacon", "email": "schacon@github.com" }
+			],
+ "type":	"C"
+}
