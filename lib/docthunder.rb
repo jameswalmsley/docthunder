@@ -95,7 +95,7 @@ class DocThunder
               :lineto => function.lineto,
               :comments => function.comments,
               :sig => function.sig,
-              :rawComments => function.rawcomments,
+              :rawComments => (function.brief + "\n\n" + function.comments).strip,
               :group => "test"
             }
             function_hash[function.name] = function_data
