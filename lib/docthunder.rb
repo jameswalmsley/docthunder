@@ -96,31 +96,27 @@ class DocThunder
               :comments => function.comments,
               :sig => function.sig,
               :rawComments => (function.brief + "\n\n" + function.comments).strip,
-              :group => "test"
+              :group => file.name
             }
             function_hash[function.name] = function_data
           end          
-        end
+        end        
 
         groups = []
-        test_group = []
-        test_group << "main"
-        test_group << "printf"
-        test_group << "strcpy"
-        test_group << "strncpy"
 
-        grp = []
-        grp << "test"
-        grp << test_group
-        groups << grp
+        version.files.each do |file|
+          grp = []
+          grp_functions = []
+          grp << file.name
 
-        grp = []
-        grp << "malloc"
-        test_group = []
-        test_group << "malloc"
-        grp << test_group
-        
-        groups << grp
+          file.functions.each do |function|
+            grp_functions << function.name
+          end
+
+          grp << grp_functions
+
+          groups << grp
+        end
 
         version_data = {
           :files => files,
