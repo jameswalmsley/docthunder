@@ -64,12 +64,12 @@ class DocThunder
 
         @rawcomments = comments        
 
-        comments.gsub(/\@param\s#{Regexp.escape(var)}\s([^@]*)/m) do |m|
+        comments.gsub!(/\@param\s#{Regexp.escape(var)}\s(.*?$)/) do |m|
           desc = $1.gsub("\n", ' ').gsub("\t", ' ').strip
           ''
         end
 
-        comments.gsub(/\@#{Regexp.escape(var)}\s([^@]*)/m) do |m|
+        comments.gsub!(/\@#{Regexp.escape(var)}\s(.*?$)/) do |m|
           desc = $1.gsub("\n", ' ').gsub("\t", ' ').strip
           ''
         end
@@ -87,17 +87,23 @@ class DocThunder
       
       return_comment = ''
 
-      comments.gsub(/\@return\s([^@]*)/m) do |m|
+      comments.gsub!(/\@return\s(.*?$)/) do |m|
         return_comment += $1.strip
         ''
       end
 
-      comments.gsub(/\@brief\s([^@]*)/m) do |m|
+      comments.gsub!(/\@brief\s(.*?$)/) do |m|
         @brief += $1.strip
         ''
       end
 
-      @comments = comments
+
+      @comments = ""
+
+      comments.each_line do |line|
+        @comments << line.strip
+      end
+
       @return_comment = return_comment
 
     end
