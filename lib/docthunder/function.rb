@@ -20,13 +20,17 @@ class DocThunder
   end
 
   class Function
-    attr_reader :return, :name, :args, :return_comment, :brief, :description
+    attr_reader :return, :name, :args, :return_comment, :brief, :description, :argline
+    attr_reader :line, :lineto, :comments, :sig, :rawcomments
 
-    def initialize(return_type, name, argstring, comments)
+    def initialize(return_type, name, argstring, comments, line, lineto)
       @name = name
       @return = return_type
       @args = []
-      
+      @brief = ""
+      @description = ""
+      @line = line
+      @lineto = lineto
       # Process the argument names!
 
       # Replace ridiculous syntax
@@ -35,7 +39,8 @@ class DocThunder
         cast = $3.gsub(',', '###')        
         "#{type}(*)(#{cast}) #{name}" 
       end
-      
+
+      @argline = args
       # Split up the individual arguments, so we can make nice objects describing them
       args = args.split(',').map do |arg|
         arg_elements = arg.strip.split(/\s/)
@@ -57,12 +62,16 @@ class DocThunder
         end
         desc = ''
 
+        @rawcomments = comments        
+
         comments.gsub(/\@param\s#{Regexp.escape(var)}\s([^@]*)/m) do |m|
           desc = $1.gsub("\n", ' ').gsub("\t", ' ').strip
+          ''
         end
 
         comments.gsub(/\@#{Regexp.escape(var)}\s([^@]*)/m) do |m|
           desc = $1.gsub("\n", ' ').gsub("\t", ' ').strip
+          ''
         end
         
         {:type => type.strip, :name => var.strip, :comment => desc.strip}                
@@ -72,7 +81,7 @@ class DocThunder
         @args << Argument.new(arg[:type], arg[:name], arg[:comment])
       end
 
-      sig = args.map do |arg|
+      @sig = args.map do |arg|
         arg[:type].to_s
       end.join('::')
       
@@ -80,7 +89,16 @@ class DocThunder
 
       comments.gsub(/\@return\s([^@]*)/m) do |m|
         return_comment += $1.strip
+        ''
       end
+
+      comments.gsub(/\@brief\s([^@]*)/m) do |m|
+        @brief += $1.strip
+        ''
+      end
+
+      @comments = comments
+      @return_comment = return_comment
 
     end
 

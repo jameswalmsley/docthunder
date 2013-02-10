@@ -5,7 +5,7 @@ class DocThunder
       doc = DocThunder.new(input_dir)
       doc.init_project
       doc.parse
-      #doc.generate_doc(selected_template)
+      doc.generate_docs
     end
 
     def self.gen(file)

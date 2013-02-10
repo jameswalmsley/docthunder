@@ -39,9 +39,105 @@ class DocThunder
 
   def parse
     @project.versions.each do |version|
-      puts "* Processing version #{version.name}"
+      puts "* Processing version #{version.name}".bold.blue
       version.parse(self)
     end
+
+    puts "* Running heuristics on object tree"        
+    @project.tally_sigs
+
+  end
+
+  def generate_docs
+    puts "* Generating output documents".green
+
+    outdir = mkdir_temp
+    puts "* outputting to #{outdir}"
+
+    Dir.chdir("/home/james/develop/docthunder/templates/docurium/") do
+      versions = []
+      @groups = {}
+      @project.versions.each do |version|
+        versions << version.name
+        version.files.each do |file|
+          file.functions.each do |function|
+            @groups[function.name] = "test"
+          end
+        end
+      end
+      
+      project = {
+        :versions => versions.reverse,
+        :github => @options['github'],
+        :name => @project.name,
+        :signatures => @project.sigs,
+        :groups => @groups,
+      }
+
+      File.open("project.json", "w+") do |f|
+        f.write(JSON.pretty_generate(project))
+      end
+
+      @project.versions.each do |version|
+        files = []
+        function_hash = {}
+
+        version.files.each do |file|
+          files << file
+          file.functions.each do |function|
+            function_data = {
+              :description => function.brief + function.description,
+              :return => {:type => function.return, :comment => function.return_comment},
+              :args => function.args,
+              :argline => function.argline,
+              :file => file.name,
+              :line => function.line,
+              :lineto => function.lineto,
+              :comments => function.comments,
+              :sig => function.sig,
+              :rawComments => function.rawcomments,
+              :group => "test"
+            }
+            function_hash[function.name] = function_data
+          end          
+        end
+
+        groups = []
+        test_group = []
+        test_group << "main"
+        test_group << "printf"
+        test_group << "strcpy"
+        test_group << "strncpy"
+
+        grp = []
+        grp << "test"
+        grp << test_group
+        groups << grp
+
+        grp = []
+        grp << "malloc"
+        test_group = []
+        test_group << "malloc"
+        grp << test_group
+        
+        groups << grp
+
+        version_data = {
+          :files => files,
+          :functions => function_hash,
+          :globals => {},
+          :types => [],
+          :prefix => "include",
+          :groups => groups
+        }
+
+        File.open(File.join("/home/james/develop/docthunder/templates/docurium/", "#{version.name}.json"), "w+") do |f|
+          f.write(JSON.pretty_generate(version_data))
+        end
+      end
+
+    end
+
   end
 
 end

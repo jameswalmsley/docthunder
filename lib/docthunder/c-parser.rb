@@ -1,26 +1,17 @@
 require 'docthunder/meta'
 require 'docthunder/function'
-
-class DocThunder
-  class SourceFile
-    attr_accessor :functions
-    def initialize
-      @functions = []
-    end
-  end
-end
+require 'docthunder/version'
 
 class DocThunder
   def parse_headers(version)
     puts "    * Initialising parser for #{version.name}"
     headers.each do |header|
       puts "        * Block-wise parsing stage for #{header}"
-      @file_obj = DocThunder::SourceFile.new
-      parse_header(@file_obj, header)
-      puts @file_obj.functions.to_json
+      file_obj = DocThunder::SourceFile.new(header)
+      parse_header(file_obj, header)
+      version.files << file_obj
     end
   end
-
 
   def parse_header(file_obj, filepath)
     lineno = 0
@@ -115,6 +106,8 @@ class DocThunder
     functions = extract_functions(data)
 
     file_obj.functions = functions
+    file_obj.lines = lineno
+
   end
 
   def extract_functions(data)
@@ -125,14 +118,21 @@ class DocThunder
       code = block[:code].join(" ")
       comments = block[:comments]
 
-      if m = /^(.*?) ([a-zA-Z_]+)\((.*)\)/.match(code)
+      if m = /^(.*?)\s([a-zA-Z_*]+)\((.*)\)/.match(code)
         ret = m[1].strip
         name = m[2].strip
         argstring = m[3].strip
 
-        function = Function.new(ret, name, argstring, comments)
+        # remove pointers from names, and push to end of type name
+        name.gsub!('*') do |m|
+          ret += '*'
+          ''
+        end
+
+        function = Function.new(ret, name, argstring, comments, block[:line], block[:lineto])
 
         functions << function
+
       end
 
     end
