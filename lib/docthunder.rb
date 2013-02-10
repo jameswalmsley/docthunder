@@ -139,7 +139,9 @@ class DocThunder
         puts "* output html into #{final_dir}"
           
         FileUtils.mkdir_p(final_dir)
+        here = File.expand_path(File.dirname(__FILE__))
         Dir.chdir(final_dir) do
+          FileUtils.cp_r(File.join(here, '..', 'templates/docurium', '.'), '.')
           FileUtils.cp_r(File.join(outdir, '.'), '.')
         end
       end
