@@ -11,7 +11,7 @@ class DocThunder
       end
 
       def parse(docthunder)
-        puts "    * Checking out #{@name} into #{@config.workdir}"
+        #puts "    * Checking out #{@name} into #{@config.workdir}"
         Dir.chdir(@config.workdir) do
           docthunder.checkout(@name, @config.workdir)
           docthunder.parse_headers(self)

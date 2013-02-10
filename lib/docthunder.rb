@@ -31,7 +31,7 @@ class DocThunder
     versions << "HEAD"
     
     versions.each do |version_name|
-      puts "    * Found #{version_name}"
+      #puts "    * Found #{version_name}"
       #version_object = Version.new(version)
       @project.versions << Project::Version.new(version_name, @project.config)
     end

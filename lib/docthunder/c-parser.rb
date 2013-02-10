@@ -4,9 +4,9 @@ require 'docthunder/version'
 
 class DocThunder
   def parse_headers(version)
-    puts "    * Initialising parser for #{version.name}"
+    #puts "    * Initialising parser for #{version.name}"
     headers.each do |header|
-      puts "        * Block-wise parsing stage for #{header}"
+      #puts "        * Block-wise parsing stage for #{header}"
       file_obj = DocThunder::SourceFile.new(header)
       parse_header(file_obj, header)
       version.files << file_obj
@@ -99,10 +99,10 @@ class DocThunder
 
     data.compact!    # This will remove any Nil entries!
 
-    puts "        * Extracting file meta-data"
+    #puts "        * Extracting file meta-data"
     meta = Meta.new(data, filepath)
 
-    puts "        * Extracting function documentation"
+    #puts "        * Extracting function documentation"
     functions = extract_functions(data)
 
     file_obj.functions = functions
