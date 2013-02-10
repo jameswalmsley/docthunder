@@ -54,7 +54,7 @@ class DocThunder
     outdir = mkdir_temp
     puts "* outputting to #{outdir}"
 
-    Dir.chdir("/home/james/develop/docthunder/templates/docurium/") do
+    Dir.chdir(outdir) do
       versions = []
       @groups = {}
       @project.versions.each do |version|
@@ -86,7 +86,7 @@ class DocThunder
           files << file
           file.functions.each do |function|
             function_data = {
-              :description => function.brief + function.description,
+              :description => function.brief,
               :return => {:type => function.return, :comment => function.return_comment},
               :args => function.args,
               :argline => function.argline,
@@ -131,13 +131,22 @@ class DocThunder
           :groups => groups
         }
 
-        File.open(File.join("/home/james/develop/docthunder/templates/docurium/", "#{version.name}.json"), "w+") do |f|
+        File.open(File.join(outdir, "#{version.name}.json"), "w+") do |f|
           f.write(JSON.pretty_generate(version_data))
         end
       end
 
+      if br = @options['branch']
+
+      else
+        final_dir = File.join(@project_dir, @options['output'] || 'docs')
+        puts "* output html into #{final_dir}"
+          
+        FileUtils.mkdir_p(final_dir)
+        Dir.chdir(final_dir) do
+          FileUtils.cp_r(File.join(outdir, '.'), '.')
+        end
+      end
     end
-
   end
-
 end
