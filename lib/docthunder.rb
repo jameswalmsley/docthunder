@@ -4,6 +4,8 @@ require 'docthunder/utils.rb'
 require 'docthunder/project.rb'
 require 'docthunder/author.rb'
 require 'docthunder/version.rb'
+require 'rocco'
+require 'docthunder/layout.rb'
 
 class DocThunder
   Version = VERSION = "0.0.1"
@@ -52,7 +54,6 @@ class DocThunder
     puts "* Generating output documents".green
 
     outdir = mkdir_temp
-    puts "* outputting to #{outdir}"
 
     Dir.chdir(outdir) do
       versions = []
@@ -79,6 +80,61 @@ class DocThunder
       end
 
       @project.versions.each do |version|
+
+        #
+        # Generate Examples!
+        #
+        tf = File.expand_path(File.join(File.dirname(__FILE__), '..', 'templates/docurium', 'layout.mustache'))
+        if ex = @options['examples']
+          workdir = mkdir_temp
+          Dir.chdir(workdir) do
+            with_git_env(workdir) do
+              `git rev-parse #{version.name}:#{ex} 2>&1` # Check that examples exist in this version.
+              if $?.exitstatus == 0
+                puts "  - processing examples for #{version.name}"
+
+                `git read-tree #{version.name}:#{ex}`
+                `git checkout-index -a`
+
+                files = []
+                Dir.glob("**/*.c") do |file|
+                  next if !File.file?(file)
+                  files << file
+                end
+
+                files.each do |file|
+                  puts "    # #{file}"
+
+                  # Highlight and Roccoize
+                  rocco = Rocco.new(file, files, {:language => 'c'})
+                  rocco_layout = Rocco::Layout.new(rocco, tf)
+                  rocco_layout.version = "#{version.name}"
+
+                  rf = rocco_layout.render
+
+                  rf_path = File.basename(file).split('.')[0..-2].join('.') + '.html'
+                  rel_path = "ex/#{version.name}/#{rf_path}"
+                  rf_path = File.join(outdir, rel_path)
+
+                  #
+                  # Create links to docurium documentation output.
+                  #
+
+                  # Write example to docs dir.
+                  FileUtils.mkdir_p(File.dirname(rf_path))
+                  File.open(rf_path, 'w+') do |f|
+                    @examples ||= []
+                    @examples << [file, rel_path]
+                    f.write(rf)
+                  end
+
+                end
+
+              end
+            end
+          end
+        end
+
         files = []
         function_hash = {}
 
@@ -124,12 +180,14 @@ class DocThunder
           :globals => {},
           :types => [],
           :prefix => "include",
-          :groups => groups
+          :groups => groups,
+          :examples => @examples
         }
 
         File.open(File.join(outdir, "#{version.name}.json"), "w+") do |f|
           f.write(JSON.pretty_generate(version_data))
         end
+
       end
 
       if br = @options['branch']
