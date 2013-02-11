@@ -10,7 +10,7 @@ class DocThunder
 
   def initialize(config_file)
     raise "You need to specify a config file" if !config_file
-    raise "You need to specify a valid config file" if !valid_config(config_file)    
+    raise "You need to specify a valid config file" if !valid_config(config_file)
   end
 
   def valid_config(file)
@@ -25,11 +25,11 @@ class DocThunder
   def init_project
     puts "* Initialising DocThunder and preparing parser for #{@options["name"]}"
     @project = Project.new(self, @options)
-    
-    puts "* Retrieving versions..."    
+
+    puts "* Retrieving versions..."
     versions = get_versions()
     versions << "HEAD"
-    
+
     versions.each do |version_name|
       #puts "    * Found #{version_name}"
       #version_object = Version.new(version)
@@ -43,7 +43,7 @@ class DocThunder
       version.parse(self)
     end
 
-    puts "* Running heuristics on object tree"        
+    puts "* Running heuristics on object tree"
     @project.tally_sigs
 
   end
@@ -65,7 +65,7 @@ class DocThunder
           end
         end
       end
-      
+
       project = {
         :versions => versions.reverse,
         :github => @options['github'],
@@ -99,8 +99,8 @@ class DocThunder
               :group => file.name
             }
             function_hash[function.name] = function_data
-          end          
-        end        
+          end
+        end
 
         groups = []
 
@@ -134,10 +134,38 @@ class DocThunder
 
       if br = @options['branch']
 
+        Dir.chdir(outdir) do
+          here = File.expand_path(File.dirname(__FILE__))
+          FileUtils.cp_r(File.join(here, '..', 'templates/docurium', '.'), '.')
+        end
+
+        puts "* Writing to branch #{br}"
+        ref = "refs/heads/#{br}"
+        with_git_env(outdir) do
+          branches = `git branch`
+          branches.gsub!('*', '')
+          if m = /\s#{br}/.match(branches)
+            psha = `git rev-parse #{ref}`.chomp
+          else
+            psha = "refs/heads/#{br}"
+          end
+
+          `git add -A`
+          tsha = `git write-tree`.chomp
+          puts "    - Wrote tree #{tsha}"
+          if(psha == ref)
+            csha = `echo 'generated docs' | git commit-tree #{tsha}`.chomp
+          else
+            csha = `echo 'generated docs' | git commit-tree #{tsha} -p #{psha}`.chomp
+          end
+          puts "    - Wrote commit #{csha}"
+          `git update-ref -m 'generated docs' #{ref} #{csha}`
+          puts "    - Updated #{br}"
+        end
       else
         final_dir = File.join(@project_dir, @options['output'] || 'docs')
         puts "* output html into #{final_dir}"
-          
+
         FileUtils.mkdir_p(final_dir)
         here = File.expand_path(File.dirname(__FILE__))
         Dir.chdir(final_dir) do
