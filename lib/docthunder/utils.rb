@@ -63,4 +63,11 @@ class DocThunder
     comment
   end
 
+  def warn(string)
+    if @warn_on
+      indent = " " * 4 * @indent_level
+      puts indent + "! WARNING: #{string}".yellow
+    end
+  end
+
 end

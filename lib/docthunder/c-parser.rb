@@ -100,7 +100,7 @@ class DocThunder
     data.compact!    # This will remove any Nil entries!
 
     #puts "        * Extracting file meta-data"
-    meta = Meta.new(data, filepath)
+    meta = Meta.new(self, data, filepath)
 
     #puts "        * Extracting function documentation"
     functions = extract_functions(data)

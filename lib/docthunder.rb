@@ -13,6 +13,9 @@ class DocThunder
   def initialize(config_file)
     raise "You need to specify a config file" if !config_file
     raise "You need to specify a valid config file" if !valid_config(config_file)
+    @warn_on = false
+    @error_on = false
+    @indent_level = 0
   end
 
   def valid_config(file)
@@ -41,7 +44,11 @@ class DocThunder
 
   def parse
     @project.versions.each do |version|
-      puts "* Processing version #{version.name}".bold.blue
+      if (version.name == "HEAD")
+        @warn_on = true
+      end
+      puts "* Processing version #{version.name}".bold.blue   
+      @indent_level = 1
       version.parse(self)
     end
 

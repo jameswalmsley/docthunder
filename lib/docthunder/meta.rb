@@ -4,9 +4,10 @@ class DocThunder
   class Meta
     attr_reader :file, :brief, :defgroup, :ingroup, :authors, :copyright, :description
     
-    def initialize(data, filename)
+    def initialize(docthunder, data, filename)
       @file, @brief, @defgroup, @ingroup, @copyright = nil
       file_line=0
+      @docthunder = docthunder
       @authors = []
       data.each do |block|
         if block[:code].size == 0          
@@ -32,7 +33,7 @@ class DocThunder
       end
 
       if @file != File.basename(filename)
-        puts "        ! WARNING: #{filename}:#{file_line} :: @file directive (#{@file}) mis-matches with filename... using real-name".yellow
+        docthunder.warn("#{filename}:#{file_line} :: @file directive (#{@file}) mis-matches with filename... using real-name")
       end
 
     end
