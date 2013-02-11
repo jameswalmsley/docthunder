@@ -24,6 +24,20 @@ Install docthunder:
 
     $ sudo gem install DocThunder-0.0.1.gem
 
+This will install all ruby based dependencies automatically.
+DocThunder can also generate literate programming documentation, using Rocco.
+Rocco has a python dependency for a library called pygments.
+
+If this is not available, then a web-service will be used instead.
+
+Install Pygments:
+
+    $ sudo apt-get install python-pygments
+	
+Or
+
+    $ sudo pip install pygments
+
 ## Usage
 
 Currently DocThunder is similar to docurium.
