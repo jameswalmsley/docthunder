@@ -91,16 +91,17 @@ class DocThunder
 
       comments.gsub!(/(\@return\s.*?$)/) do |m|
         m = /\@return\s(.*?$)/.match($1)
-        return_comment += m[1].strip
+        return_comment += m[1].strip + "\n"
         ''
       end
 
       comments.gsub!(/(\@brief\s.*?$)/) do |m|
         m = /\@brief\s(.*?$)/.match($1)
-        @brief += m[1].strip
+        @brief += m[1].strip + "\n"
         ''
       end
 
+      @brief.strip!
 
       @comments = ""
 
@@ -114,7 +115,7 @@ class DocThunder
 
       @comments.strip!
 
-      @return_comment = return_comment
+      @return_comment = return_comment.strip!
 
     end
 

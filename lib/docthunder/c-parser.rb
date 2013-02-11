@@ -20,7 +20,7 @@ class DocThunder
     content.each do |line|
       lineno = lineno + 1
       line = line.strip()
-      
+
       #
       # Look for Preprocessor Macros
       #
@@ -40,7 +40,7 @@ class DocThunder
 
     #
     # Find functions
-    #    
+    #
     lineno = 0
     data = []
     current = -1
@@ -75,7 +75,7 @@ class DocThunder
         end
 
         data[current] ||= {:comments => '', :code => [], :line => lineno}
-        data[current][:lineto] = lineno   
+        data[current][:lineto] = lineno
 
         if m = /(.*?);$/.match(line)        # e.g. matching: code;
           if (data[current][:code].size > 0) && !in_block
@@ -86,14 +86,14 @@ class DocThunder
           end
           in_comment = false if line =~ /\*\//
           in_block = false if line =~ /\}/
-        else 
+        else
           if in_comment
             data[current][:comments] += clean_comment(line) + "\n"
           else
             data[current][:code] << line
           end
         end
-      end    
+      end
 
     end
 
@@ -114,11 +114,12 @@ class DocThunder
     functions = []
     data.each do |block|
       next if block[:code].size == 0
-      
+
       code = block[:code].join(" ")
       comments = block[:comments]
 
-      if m = /^(.*?)\s([a-zA-Z_*]+)\((.*)\)/.match(code)
+      #if m = /\s*(.*?)\s([a-zA-Z_*]+)\s\((.*)\)/.match(code)
+      if m = /\s*(.*?)\s(.*?)\s*\((.*?)\)/.match(code)
         ret = m[1].strip
         name = m[2].strip
         argstring = m[3].strip
