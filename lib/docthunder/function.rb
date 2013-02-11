@@ -67,13 +67,13 @@ class DocThunder
         comments.gsub!(/(\@param\s#{Regexp.escape(var)}\s.*?$)/) do |m|
           m = /\@param\s#{Regexp.escape(var)}\s(.*?$)/.match($1)
           desc = m[1].gsub("\n", ' ').gsub("\t", ' ').strip
-          ''
+          '@'
         end
 
         comments.gsub!(/(\@#{Regexp.escape(var)}\s.*?$)/) do |m|
           m = /\@#{Regexp.escape(var)}\s(.*?$)/.match($1)
           desc = m[1].gsub("\n", ' ').gsub("\t", ' ').strip
-          ''
+          '@'
         end
 
         {:type => type.strip, :name => var.strip, :comment => desc.strip}
@@ -92,13 +92,13 @@ class DocThunder
       comments.gsub!(/(\@return\s.*?$)/) do |m|
         m = /\@return\s(.*?$)/.match($1)
         return_comment += m[1].strip + "\n"
-        ''
+        '@'
       end
 
       comments.gsub!(/(\@brief\s.*?$)/) do |m|
         m = /\@brief\s(.*?$)/.match($1)
         @brief += m[1].strip + "\n"
-        ''
+        '@'
       end
 
       @brief.strip!
@@ -109,6 +109,11 @@ class DocThunder
 
       comments.each_line do |line|
         next if line.strip.length == 0 && in_comments == false
+        if line.strip == "@"
+          in_comments = false
+          next
+        end
+
         in_comments = true
         @comments << line.strip + "\n"
       end
