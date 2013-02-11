@@ -7,7 +7,6 @@ class DocThunder
     tpath = tf.path
     tf.unlink
     FileUtils.mkdir_p(tpath)
-    puts "* Creating temporary dir #{tpath}"
     tpath
   end
 
