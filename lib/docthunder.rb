@@ -61,7 +61,7 @@ class DocThunder
         versions << version.name
         version.files.each do |file|
           file.functions.each do |function|
-            @groups[function.name] = "test"
+            @groups[function.name] = file.name.gsub('/', '_')
           end
         end
       end
@@ -96,7 +96,7 @@ class DocThunder
               :comments => function.comments,
               :sig => function.sig,
               :rawComments => (function.brief + "\n\n" + function.comments).strip,
-              :group => file.name
+              :group => file.name.gsub('/', '_')
             }
             function_hash[function.name] = function_data
           end
@@ -107,7 +107,7 @@ class DocThunder
         version.files.each do |file|
           grp = []
           grp_functions = []
-          grp << file.name
+          grp << file.name.gsub('/', '_')
 
           file.functions.each do |function|
             grp_functions << function.name
