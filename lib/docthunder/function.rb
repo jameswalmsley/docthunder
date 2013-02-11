@@ -36,8 +36,8 @@ class DocThunder
       # Replace ridiculous syntax
       args = argstring.gsub(/(\w+) \(\*(.*?)\)\(([^\)]*)\)/) do |m|
         type, name = $1, $2
-        cast = $3.gsub(',', '###')        
-        "#{type}(*)(#{cast}) #{name}" 
+        cast = $3.gsub(',', '###')
+        "#{type}(*)(#{cast}) #{name}"
       end
 
       @argline = args
@@ -62,19 +62,21 @@ class DocThunder
         end
         desc = ''
 
-        @rawcomments = comments        
+        @rawcomments = comments
 
-        comments.gsub!(/\@param\s#{Regexp.escape(var)}\s(.*?$)/) do |m|
-          desc = $1.gsub("\n", ' ').gsub("\t", ' ').strip
+        comments.gsub!(/(\@param\s#{Regexp.escape(var)}\s.*?$)/) do |m|
+          m = /\@param\s#{Regexp.escape(var)}\s(.*?$)/.match($1)
+          desc = m[1].gsub("\n", ' ').gsub("\t", ' ').strip
           ''
         end
 
-        comments.gsub!(/\@#{Regexp.escape(var)}\s(.*?$)/) do |m|
-          desc = $1.gsub("\n", ' ').gsub("\t", ' ').strip
+        comments.gsub!(/(\@#{Regexp.escape(var)}\s.*?$)/) do |m|
+          m = /\@#{Regexp.escape(var)}\s(.*?$)/.match($1)
+          desc = m[1].gsub("\n", ' ').gsub("\t", ' ').strip
           ''
         end
-        
-        {:type => type.strip, :name => var.strip, :comment => desc.strip}                
+
+        {:type => type.strip, :name => var.strip, :comment => desc.strip}
       end
 
       args.each do |arg|
@@ -84,25 +86,33 @@ class DocThunder
       @sig = args.map do |arg|
         arg[:type].to_s
       end.join('::')
-      
+
       return_comment = ''
 
-      comments.gsub!(/\@return\s(.*?$)/) do |m|
-        return_comment += $1.strip
+      comments.gsub!(/(\@return\s.*?$)/) do |m|
+        m = /\@return\s(.*?$)/.match($1)
+        return_comment += m[1].strip
         ''
       end
 
-      comments.gsub!(/\@brief\s(.*?$)/) do |m|
-        @brief += $1.strip
+      comments.gsub!(/(\@brief\s.*?$)/) do |m|
+        m = /\@brief\s(.*?$)/.match($1)
+        @brief += m[1].strip
         ''
       end
 
 
       @comments = ""
 
+      in_comments = false
+
       comments.each_line do |line|
-        @comments << line.strip
+        next if line.strip.length == 0 && in_comments == false
+        in_comments = true
+        @comments << line.strip + "\n"
       end
+
+      @comments.strip!
 
       @return_comment = return_comment
 
