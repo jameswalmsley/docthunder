@@ -36,6 +36,42 @@ h3 #version {
 .category_index dt { margin-left: 0.5em !important; }
 .category_index dd { margin-left: 1.5em !important; }
 
+#jump_to, #jump_page {
+	background: white;
+	-webkit-box-shadow: 0 0 25px #777; -moz-box-shadow: 0 0 25px #777;
+	-webkit-border-bottom-left-radius: 5px; -moz-border-radius-bottomleft: 5px;
+	font: 10px Arial;
+	text-transform: uppercase;
+	cursor: pointer;
+	text-align: right;
+}
+#jump_to, #jump_wrapper {
+	position: fixed;
+	right: 0; top: 0;
+	padding: 5px 10px;
+}
+#jump_wrapper {
+    padding: 0;
+    display: none;
+}
+#jump_to:hover #jump_wrapper {
+    display: block;
+}
+#jump_page {
+    padding: 5px 0 3px;
+    margin: 0 0 25px 25px;
+}
+#jump_page .source {
+    display: block;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-top: 1px solid #eee;
+}
+#jump_page .source:hover {
+    background: #f5f5ff;
+}
+#jump_page .source:first-child {
+}
 
 /*********************/
 /*      Sidebar      */
@@ -90,12 +126,12 @@ input.search {
   background: url(../images/search_icon.png) 5px 50% no-repeat white;
 }
 
-a small { 
+a small {
   font-size: 0.8em;
   color: #aaa;
 }
 
-h2 small { 
+h2 small {
   font-size: 0.8em;
   font-weight: normal;
   color: #666;
