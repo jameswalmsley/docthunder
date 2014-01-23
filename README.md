@@ -15,6 +15,11 @@ Clone the source with git:
 
     $ git clone git://github.com/jameswalmsley/docthunder.git
 
+Install pre-requisited:
+
+    $ sudo gem install colored rocco version_sorter
+    $ sudo pip install pygments
+
 Compile the gem:
 
     $ cd docthunder
